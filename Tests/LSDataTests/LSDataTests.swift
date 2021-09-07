@@ -1,11 +1,10 @@
     import XCTest
-    @testable import CoreModel
+    @testable import LSData
 
-    final class CoreModelTests: XCTestCase {
+    final class LDCoreModelTests: XCTestCase {
         func testExample() {
             // This is an example of a functional test case.
             // Use XCTAssert and related functions to verify your tests produce the correct
             // results.
-            XCTAssertEqual(CoreModel().text, "Hello, World!")
         }
     }
