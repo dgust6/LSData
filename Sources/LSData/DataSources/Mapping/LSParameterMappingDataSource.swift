@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-open class LSParameterMappingDataSource<DS: DataSource, M: Mapper, Param>: DataSource where DS.Parameter == M.Output, M.Input == Param? {
+open class LSParameterMappingDataSource<DS: DataSource, M: Mapper, Param>: DataSource where DS.Parameter == M.Output, M.Input == Param {
 
     public typealias Parameter = Param
     public typealias Output = DS.Output
@@ -14,7 +14,7 @@ open class LSParameterMappingDataSource<DS: DataSource, M: Mapper, Param>: DataS
         self.mapper = mapper
     }
     
-    public func publisher(parameter: Param?) -> AnyPublisher<DS.Output, DS.OutputError> {
+    public func publisher(parameter: Param) -> AnyPublisher<DS.Output, DS.OutputError> {
         dataSource.publisher(parameter: mapper.map(parameter))
             .eraseToAnyPublisher()
     }
@@ -27,7 +27,7 @@ extension DataSource {
     }
     
     
-    public func paramMap<T>(map: @escaping (T?) -> Parameter) -> LSParameterMappingDataSource<Self, LSGenericMapper<T?, Parameter>, Parameter> {
+    public func paramMap<T>(map: @escaping (T) -> Parameter) -> LSParameterMappingDataSource<Self, LSGenericMapper<T, Parameter>, Parameter> {
         paramMap(with: LSGenericMapper(map))
     }
 }

@@ -22,7 +22,7 @@ public class LSWrappedBasicRepository<Source: DataSource, Storage: DataStorage>:
         storage.store(item)
     }
     
-    public func publisher(parameter: Parameter?) -> AnyPublisher<Output, OutputError> {
+    public func publisher(parameter: Parameter) -> AnyPublisher<Output, OutputError> {
         source.publisher(parameter: parameter)
     }
 }

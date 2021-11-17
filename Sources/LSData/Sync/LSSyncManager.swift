@@ -11,14 +11,14 @@ public protocol SyncManager {
 
 public class LSSyncManager<Source: DataSource, Storage: DataStorage>: SyncManager where Source.Output == Storage.StoredItem, Storage.StorageReturn: Publisher {
 
-    public var parameter: Source.Parameter?
+    public var parameter: Source.Parameter
 
     private let dataSource: Source
     private let dataStorage: Storage
 
     private var cancelBag = Set<AnyCancellable>()
 
-    public init(dataSource: Source, dataStorage: Storage, parameter: Source.Parameter? = nil) {
+    public init(dataSource: Source, dataStorage: Storage, parameter: Source.Parameter) {
         self.dataSource = dataSource
         self.dataStorage = dataStorage
         self.parameter = parameter
@@ -32,14 +32,21 @@ public class LSSyncManager<Source: DataSource, Storage: DataStorage>: SyncManage
     }
 }
 
+extension DataSource where Output == Void {
+    
+}
+
+extension DataSource where Output == Optional<Any> {
+    
+}
+
 extension DataSource {
     
-    public func syncManager<Storage: DataStorage>(with storage: Storage, parameter: Parameter? = nil) -> LSSyncManager<Self, Storage> where Output == Storage.StoredItem {
+    public func syncManager<Storage: DataStorage>(with storage: Storage, parameter: Parameter) -> LSSyncManager<Self, Storage> where Output == Storage.StoredItem {
         LSSyncManager(dataSource: self, dataStorage: storage, parameter: parameter)
     }
     
-    public func store<Storage: DataStorage>(to storage: Storage, parameter: Parameter? = nil, count: Int = 1) -> AnyPublisher<Storage.StorageReturn.Output, Error> where Output == Storage.StoredItem, Storage.StorageReturn: Publisher {
-        
+    public func store<Storage: DataStorage>(to storage: Storage, parameter: Parameter, count: Int = 1) -> AnyPublisher<Storage.StorageReturn.Output, Error> where Output == Storage.StoredItem, Storage.StorageReturn: Publisher {
         weak var weakStorage = storage as AnyObject
         
         let publisher = count == 0 ?

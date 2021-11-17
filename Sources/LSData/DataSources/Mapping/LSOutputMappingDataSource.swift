@@ -14,7 +14,7 @@ open class LSOutputMappingDataSource<DS: DataSource, M: Mapper>: DataSource wher
         self.mapper = mapper
     }
     
-    public func publisher(parameter: DS.Parameter?) -> AnyPublisher<M.Output, DS.OutputError> {
+    public func publisher(parameter: DS.Parameter) -> AnyPublisher<M.Output, DS.OutputError> {
         dataSource.publisher(parameter: parameter)
             .map(mapper.map)
             .eraseToAnyPublisher()

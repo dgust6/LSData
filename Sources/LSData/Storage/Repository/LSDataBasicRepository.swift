@@ -13,7 +13,7 @@ public class LSAnyDataBasicRepository<Output, QueryParameter, OutputError, Stora
     public typealias StoredItem = Output
     public typealias StorageReturn = StorageReturn
     
-    private let _publisher: ((QueryParameter?) -> AnyPublisher<Output, OutputError>)
+    private let _publisher: ((QueryParameter) -> AnyPublisher<Output, OutputError>)
     private let _store: ((StoredItem) -> StorageReturn)
 
     public init<Repository: DataBasicRepository>(repository: Repository) where Repository.StoredItem == StoredItem, Repository.StorageReturn == StorageReturn, Repository.OutputError == OutputError, Repository.Parameter == Parameter {
@@ -26,7 +26,7 @@ public class LSAnyDataBasicRepository<Output, QueryParameter, OutputError, Stora
         _publisher = source.publisher
     }
 
-    public func publisher(parameter: QueryParameter?) -> AnyPublisher<Output, OutputError> {
+    public func publisher(parameter: QueryParameter) -> AnyPublisher<Output, OutputError> {
         _publisher(parameter)
     }
     
