@@ -7,16 +7,29 @@ public protocol DataSource {
     associatedtype Parameter = Void
     associatedtype OutputError: Error = Error
     
-    func publisher(parameter: Parameter?) -> AnyPublisher<Output, OutputError>
-    func publisher() -> AnyPublisher<Output, OutputError>
+    func publisher(parameter: Parameter) -> AnyPublisher<Output, OutputError>
     func erase() -> LSAnyDataSource<Output, Parameter, OutputError>
 }
 
-public extension DataSource {
+public extension DataSource where Parameter == Void {
+    func publisher() -> AnyPublisher<Output, OutputError> {
+        publisher(parameter: ())
+    }
+}
+
+public extension DataSource where Parameter == Optional<Any> {
     func publisher() -> AnyPublisher<Output, OutputError> {
         publisher(parameter: nil)
     }
-    
+}
+
+public extension DataSource where Parameter == Array<Any> {
+    func publisher() -> AnyPublisher<Output, OutputError> {
+        publisher(parameter: [])
+    }
+}
+
+public extension DataSource {
     func erase() -> LSAnyDataSource<Output, Parameter, OutputError> {
         LSAnyDataSource(dataSource: self)
     }
@@ -28,13 +41,13 @@ public class LSAnyDataSource<Output, QueryParameter, OutputError>: DataSource wh
     public typealias Parameter = QueryParameter
     public typealias OutputError = OutputError
     
-    private let _publisher: ((QueryParameter?) -> AnyPublisher<Output, OutputError>)
+    private let _publisher: ((QueryParameter) -> AnyPublisher<Output, OutputError>)
     
     public init<DS: DataSource>(dataSource: DS) where DS.Output == Output, DS.Parameter == QueryParameter, DS.OutputError == OutputError {
         _publisher = dataSource.publisher
     }
     
-    public func publisher(parameter: Parameter?) -> AnyPublisher<Output, OutputError> {
+    public func publisher(parameter: Parameter) -> AnyPublisher<Output, OutputError> {
         _publisher(parameter)
     }
 }

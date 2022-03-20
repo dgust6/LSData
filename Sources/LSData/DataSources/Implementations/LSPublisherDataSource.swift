@@ -13,7 +13,7 @@ public class LSPublisherDataSource<P: Publisher>: DataSource {
         self.internalPublisher = publisher
     }
     
-    public func publisher(parameter: Void?) -> AnyPublisher<Output, OutputError> {
+    public func publisher(parameter: Void) -> AnyPublisher<Output, OutputError> {
         internalPublisher.eraseToAnyPublisher()
     }
 }

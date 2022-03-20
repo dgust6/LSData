@@ -17,12 +17,8 @@ class LDPublisherModifyingDataSource<Output, OutputError: Error, DS: DataSource>
         self.dataSource = dataSource
     }
     
-    func publisher(parameter: Parameter?) -> AnyPublisher<Output, OutputError> {
+    func publisher(parameter: Parameter) -> AnyPublisher<Output, OutputError> {
         modifyer(dataSource.publisher(parameter: parameter))
-    }
-    
-    func publisher() -> AnyPublisher<Output, OutputError> {
-        modifyer(dataSource.publisher())
     }
 }
 
