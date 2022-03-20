@@ -5,7 +5,6 @@ public class LSWrappedBasicRepository<Source: DataSource, Storage: DataStorage>:
 
     public typealias StoredItem = Storage.StoredItem
     public typealias StorageReturn = Storage.StorageReturn
-    public typealias StorageError = Storage.StorageError
     public typealias OutputError = Source.OutputError
     public typealias Parameter = Source.Parameter
     public typealias Output = Source.Output
@@ -19,7 +18,7 @@ public class LSWrappedBasicRepository<Source: DataSource, Storage: DataStorage>:
         self.storage = storage
     }
     
-    public func store(_ item: StoredItem) -> AnyPublisher<StorageReturn, StorageError> {
+    public func store(_ item: StoredItem) -> StorageReturn {
         storage.store(item)
     }
     

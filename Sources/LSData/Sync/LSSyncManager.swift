@@ -9,7 +9,7 @@ public protocol SyncManager {
     func sync()
 }
 
-public class LSSyncManager<Source: DataSource, Storage: DataStorage>: SyncManager where Source.Output == Storage.StoredItem {
+public class LSSyncManager<Source: DataSource, Storage: DataStorage>: SyncManager where Source.Output == Storage.StoredItem, Storage.StorageReturn: Publisher {
 
     public var parameter: Source.Parameter?
 
@@ -38,16 +38,16 @@ extension DataSource {
         LSSyncManager(dataSource: self, dataStorage: storage, parameter: parameter)
     }
     
-    public func store<Storage: DataStorage>(to storage: Storage, parameter: Parameter? = nil, count: Int = 1) -> AnyPublisher<Storage.StorageReturn, Error> where Output == Storage.StoredItem {
+    public func store<Storage: DataStorage>(to storage: Storage, parameter: Parameter? = nil, count: Int = 1) -> AnyPublisher<Storage.StorageReturn.Output, Error> where Output == Storage.StoredItem, Storage.StorageReturn: Publisher {
         
         weak var weakStorage = storage as AnyObject
         
         let publisher = count == 0 ?
-            publisher(parameter: parameter).eraseToAnyPublisher()
+        publisher(parameter: parameter).eraseToAnyPublisher()
             : publisher(parameter: parameter).prefix(count).eraseToAnyPublisher()
         
         return publisher
-            .tryMap { item -> AnyPublisher<Storage.StorageReturn, Error> in
+            .tryMap { item -> AnyPublisher<Storage.StorageReturn.Output, Error> in
                 guard let storage = weakStorage as? Storage else { throw StorageDeallocationError.deallocated }
                 return storage
                     .store(item)

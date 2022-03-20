@@ -13,7 +13,7 @@ open class LSInputMappingDataStorage<Storage: DataStorage, M: Mapper>: DataStora
         self.mapper = mapper
     }
     
-    public func store(_ item: M.Input) -> AnyPublisher<Storage.StorageReturn, Storage.StorageError> {
+    public func store(_ item: M.Input) -> Storage.StorageReturn {
         storage.store(mapper.map(item))
     }
 }

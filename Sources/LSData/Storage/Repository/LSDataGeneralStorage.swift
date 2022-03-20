@@ -6,7 +6,7 @@ public protocol DataGeneralStorage: DataInsertStorage, DataOverwriteStorage, Dat
 }
 
 public extension DataGeneralStorage {
-    func store(_ item: StoredItem) -> AnyPublisher<StorageReturn, StorageError> {
+    func store(_ item: StoredItem) -> StorageReturn {
         overwriteAll(item)
     }
 }

@@ -13,12 +13,8 @@ open class LSOutputMappingDataStorage<Storage: DataStorage, M: Mapper>: DataStor
         self.mapper = mapper
     }
     
-    public func store(_ item: StoredItem) -> AnyPublisher<M.Output, Storage.StorageError> {
-        storage.store(item)
-            .compactMap { [weak self] items in
-                self?.mapper.map(items)
-            }
-            .eraseToAnyPublisher()
+    public func store(_ item: StoredItem) -> M.Output {
+        mapper.map(storage.store(item))
     }
 }
 
