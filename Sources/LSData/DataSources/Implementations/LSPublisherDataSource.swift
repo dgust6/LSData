@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-public class LSPublisherDataSource<P: Publisher>: DataSource {
+open class LSPublisherDataSource<P: Publisher>: DataSource {
     
     public typealias Output = P.Output
     public typealias OutputError = P.Failure
@@ -13,13 +13,13 @@ public class LSPublisherDataSource<P: Publisher>: DataSource {
         self.internalPublisher = publisher
     }
     
-    public func publisher(parameter: Void) -> AnyPublisher<Output, OutputError> {
+    open func publisher(parameter: Void) -> AnyPublisher<Output, OutputError> {
         internalPublisher.eraseToAnyPublisher()
     }
 }
 
-extension Publisher {
-    public func asDataSource() -> LSPublisherDataSource<Self> {
+public extension Publisher {
+    func asDataSource() -> LSPublisherDataSource<Self> {
         LSPublisherDataSource(publisher: self)
     }
 }

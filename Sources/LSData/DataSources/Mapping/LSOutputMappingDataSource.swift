@@ -14,23 +14,26 @@ open class LSOutputMappingDataSource<DS: DataSource, M: Mapper>: DataSource wher
         self.mapper = mapper
     }
     
-    public func publisher(parameter: DS.Parameter) -> AnyPublisher<M.Output, DS.OutputError> {
+    open func publisher(parameter: DS.Parameter) -> AnyPublisher<M.Output, DS.OutputError> {
         dataSource.publisher(parameter: parameter)
             .map(mapper.map)
             .eraseToAnyPublisher()
     }
-    
-    public func erase() -> LSAnyDataSource<Output, Parameter, OutputError> {
-        LSAnyDataSource(dataSource: self)
-    }
 }
 
-extension DataSource {
-    public func outMap<T, M: Mapper>(with mapper: M) -> LSOutputMappingDataSource<Self, M> where M.Input == Output, M.Output == T {
+public extension DataSource {
+    func outMap<T, M: Mapper>(with mapper: M) -> LSOutputMappingDataSource<Self, M> where M.Input == Output, M.Output == T {
         LSOutputMappingDataSource(mapper: mapper, dataSource: self)
     }
     
-    public func outMap<T>(map: @escaping (Output) -> T) -> LSOutputMappingDataSource<Self, LSGenericMapper<Output, T>> {
+    func outMap<T>(map: @escaping (Output) -> T) -> LSOutputMappingDataSource<Self, LSGenericMapper<Output, T>> {
         outMap(with: LSGenericMapper(map))
+    }
+    
+    func onOutput(_ handler: @escaping (Output) -> Void) -> LSOutputMappingDataSource<Self, LSGenericMapper<Output, Output>> {
+        outMap() { output in
+            handler(output)
+            return output
+        }
     }
 }

@@ -1,5 +1,4 @@
 import Foundation
-import Combine
 
 public protocol Mapper {
     associatedtype Input
@@ -8,8 +7,8 @@ public protocol Mapper {
     func map(_ input: Input) -> Output
 }
 
-extension Mapper {
-    public func erase() -> LSAnyMapper<Input, Output> {
+public extension Mapper {
+    func erase() -> LSAnyMapper<Input, Output> {
         LSAnyMapper(mapper: self)
     }
 }

@@ -13,17 +13,17 @@ open class LSInputMappingDataStorage<Storage: DataStorage, M: Mapper>: DataStora
         self.mapper = mapper
     }
     
-    public func store(_ item: M.Input) -> Storage.StorageReturn {
+    open func store(_ item: M.Input) -> Storage.StorageReturn {
         storage.store(mapper.map(item))
     }
 }
 
-extension DataStorage {
-    public func itemMap<M: Mapper>(with mapper: M) -> LSInputMappingDataStorage<Self, M> where Self.StoredItem == M.Output {
+public extension DataStorage {
+    func itemMap<M: Mapper>(with mapper: M) -> LSInputMappingDataStorage<Self, M> where Self.StoredItem == M.Output {
         LSInputMappingDataStorage(mapper: mapper, storage: self)
     }
     
-    public func itemMap<MapIn>(map: @escaping (MapIn) -> Self.StoredItem) -> LSInputMappingDataStorage<Self, LSGenericMapper<MapIn, Self.StoredItem>> {
+    func itemMap<MapIn>(map: @escaping (MapIn) -> Self.StoredItem) -> LSInputMappingDataStorage<Self, LSGenericMapper<MapIn, Self.StoredItem>> {
         itemMap(with: LSGenericMapper(map))
     }
 }

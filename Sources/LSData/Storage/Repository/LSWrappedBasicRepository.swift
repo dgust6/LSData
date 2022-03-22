@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-public class LSWrappedBasicRepository<Source: DataSource, Storage: DataStorage>: DataBasicRepository where Storage.StoredItem == Source.Output {
+open class LSWrappedBasicRepository<Source: DataSource, Storage: DataStorage>: DataBasicRepository where Storage.StoredItem == Source.Output {
 
     public typealias StoredItem = Storage.StoredItem
     public typealias StorageReturn = Storage.StorageReturn
@@ -18,11 +18,11 @@ public class LSWrappedBasicRepository<Source: DataSource, Storage: DataStorage>:
         self.storage = storage
     }
     
-    public func store(_ item: StoredItem) -> StorageReturn {
+    open func store(_ item: StoredItem) -> StorageReturn {
         storage.store(item)
     }
     
-    public func publisher(parameter: Parameter) -> AnyPublisher<Output, OutputError> {
+    open func publisher(parameter: Parameter) -> AnyPublisher<Output, OutputError> {
         source.publisher(parameter: parameter)
     }
 }
