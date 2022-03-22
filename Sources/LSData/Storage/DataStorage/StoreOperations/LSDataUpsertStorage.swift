@@ -6,7 +6,7 @@ public protocol DataUpsertStorage: DataStorage {
     func upsert(_ item: StoredItem) -> StorageReturn
 }
 
-extension DataUpsertStorage {
+public extension DataUpsertStorage {
     func store(_ item: StoredItem) -> StorageReturn {
         upsert(item)
     }

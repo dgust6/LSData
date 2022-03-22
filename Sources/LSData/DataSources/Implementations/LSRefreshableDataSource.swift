@@ -1,27 +1,27 @@
 import Foundation
 import Combine
 
-public class LSRefreshableDataSource<T>: DataSource where T: DataSource {
+open class LSRefreshableDataSource<T>: DataSource where T: DataSource {
 
-    public var autoRefresh: Bool
-    public var parameter: T.Parameter
+    open var autoRefresh: Bool
+    open var parameter: T.Parameter
     
     private let dataSource: T
     private var isRefreshing = false
     private let subject = CurrentValueSubject<T.Output?, T.OutputError>(nil)
     private var cancelBag = Set<AnyCancellable>()
 
-    public init(dataSource: T, autoRefresh: Bool = true, parameter: T.Parameter) {
+    public init(dataSource: T, autoRefresh: Bool = false, parameter: T.Parameter) {
         self.dataSource = dataSource
         self.autoRefresh = autoRefresh
         self.parameter = parameter
     }
     
-    public func refresh(with parameter: T.Parameter) {
+    open func refresh(with parameter: T.Parameter? = nil) {
         guard !isRefreshing else { return }
         isRefreshing = true
-        dataSource.publisher(parameter: parameter)
-            .prefix(1)
+        dataSource.publisher(parameter: parameter ?? self.parameter)
+            .first()
             .sink(receiveCompletion: { _ in
                 
             }, receiveValue: { [weak self] in
@@ -33,9 +33,9 @@ public class LSRefreshableDataSource<T>: DataSource where T: DataSource {
         
     }
 
-    public func publisher(parameter: T.Parameter) -> AnyPublisher<T.Output, T.OutputError> {
+    open func publisher(parameter: Void) -> AnyPublisher<T.Output, T.OutputError> {
         if autoRefresh {
-            refresh(with: parameter)
+            refresh(with: self.parameter)
         }
         return subject
             .compactMap { $0 }
@@ -43,8 +43,8 @@ public class LSRefreshableDataSource<T>: DataSource where T: DataSource {
     }
 }
 
-extension DataSource {
-    public func refreshable(autoRefresh: Bool = true, parameter: Parameter) -> LSRefreshableDataSource<Self> {
+public extension DataSource {
+    func refreshable(autoRefresh: Bool = true, parameter: Parameter) -> LSRefreshableDataSource<Self> {
         LSRefreshableDataSource(dataSource: self, autoRefresh: autoRefresh, parameter: parameter)
     }
 }
@@ -59,24 +59,24 @@ public extension LSRefreshableDataSource where T.Parameter == Optional<Any> {
     }
 }
 
-extension DataSource where Parameter == Optional<Any>  {
-    public func refreshable(autoRefresh: Bool = true) -> LSRefreshableDataSource<Self> {
+public extension DataSource where Parameter == Optional<Any>  {
+    func refreshable(autoRefresh: Bool = false) -> LSRefreshableDataSource<Self> {
         refreshable(autoRefresh: autoRefresh, parameter: nil)
     }
 }
 
-extension LSRefreshableDataSource where T.Parameter == Void {
+public extension LSRefreshableDataSource where T.Parameter == Void {
     func refresh() {
         refresh(with: ())
     }
     
-    convenience init(dataSource: T, autoRefresh: Bool = true) {
+    convenience init(dataSource: T, autoRefresh: Bool = false) {
         self.init(dataSource: dataSource, autoRefresh: autoRefresh, parameter: ())
     }
 }
 
-extension DataSource where Parameter == Void  {
-    public func refreshable(autoRefresh: Bool = true) -> LSRefreshableDataSource<Self> {
+public extension DataSource where Parameter == Void  {
+    func refreshable(autoRefresh: Bool = false) -> LSRefreshableDataSource<Self> {
         refreshable(autoRefresh: autoRefresh, parameter: ())
     }
 }

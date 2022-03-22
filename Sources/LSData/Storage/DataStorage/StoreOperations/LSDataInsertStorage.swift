@@ -6,7 +6,7 @@ public protocol DataInsertStorage: DataStorage {
     func insert(_ item: StoredItem) -> StorageReturn
 }
 
-extension DataInsertStorage {
+public extension DataInsertStorage {
     func store(_ item: StoredItem) -> StorageReturn {
         insert(item)
     }

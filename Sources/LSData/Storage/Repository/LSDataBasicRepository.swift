@@ -5,7 +5,7 @@ public protocol DataBasicRepository: DataSource, DataStorage where StoredItem ==
 
 }
 
-public class LSAnyDataBasicRepository<Output, QueryParameter, OutputError, StorageReturn, StorageError>: DataBasicRepository where OutputError: Error {
+open class LSAnyDataBasicRepository<Output, QueryParameter, OutputError, StorageReturn, StorageError>: DataBasicRepository where OutputError: Error {
 
     public typealias Output = Output
     public typealias Parameter = QueryParameter
@@ -26,11 +26,11 @@ public class LSAnyDataBasicRepository<Output, QueryParameter, OutputError, Stora
         _publisher = source.publisher
     }
 
-    public func publisher(parameter: QueryParameter) -> AnyPublisher<Output, OutputError> {
+    open func publisher(parameter: QueryParameter) -> AnyPublisher<Output, OutputError> {
         _publisher(parameter)
     }
     
-    public func store(_ item: Output) -> StorageReturn {
+    open func store(_ item: Output) -> StorageReturn {
         _store(item)
     }
 }
