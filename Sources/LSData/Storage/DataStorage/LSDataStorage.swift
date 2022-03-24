@@ -1,19 +1,27 @@
 import Foundation
 import Combine
 
+/// Protocol defining a data storage/repository.
+///
+/// It supplies the method `store` which should store the supplied item.
+/// In many use-cases this `StoredItem` will be an array of supplied type.
 public protocol DataStorage {
     associatedtype StoredItem
     associatedtype StorageReturn = Void
     
+    /// Stores the supplied `item`.
     func store(_ item: StoredItem) -> StorageReturn
 }
 
 public extension DataStorage {
+    
+    /// Type erases the `DataStorage` to `LSAnyDataStorage`.
     func erase() -> LSAnyDataStorage<StoredItem, StorageReturn> {
         LSAnyDataStorage(storage: self)
     }
 }
 
+/// Type erased `DataStorage`.
 public class LSAnyDataStorage<StoredItem, StorageReturn>: DataStorage {
 
     public typealias StoredItem = StoredItem
@@ -35,6 +43,10 @@ public enum StorageDeallocationError: Error {
 }
 
 public extension DataSource {
+    
+    /// Stores the output to supplied `storage`.
+    ///
+    /// `count` parameter defines number of times data is stored before terminating. `count` of 0 means that indefinite storage (each time data is outputted, it's stored).
     func store<Storage: DataStorage>(to storage: Storage, parameter: Parameter, count: Int = 1) -> AnyPublisher<Storage.StorageReturn.Output, Error> where Output == Storage.StoredItem, Storage.StorageReturn: Publisher {
         weak var weakStorage = storage as AnyObject
         
