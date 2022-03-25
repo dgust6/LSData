@@ -68,7 +68,7 @@ open class LSRefreshableDataSource<T>: DataSource where T: DataSource {
 public extension DataSource {
     
     /// Creates `LSRefreshableDataSource` from this `DataSource`.
-    func refreshable(autoRefresh: Bool = true, parameter: Parameter) -> LSRefreshableDataSource<Self> {
+    func refreshable(autoRefresh: Bool = false, parameter: Parameter) -> LSRefreshableDataSource<Self> {
         LSRefreshableDataSource(dataSource: self, autoRefresh: autoRefresh, parameter: parameter)
     }
 }
@@ -78,7 +78,7 @@ public extension LSRefreshableDataSource where T.Parameter == Optional<Any> {
         refresh(with: nil)
     }
     
-    convenience init(dataSource: T, autoRefresh: Bool = true) {
+    convenience init(dataSource: T, autoRefresh: Bool = false) {
         self.init(dataSource: dataSource, autoRefresh: autoRefresh, parameter: nil)
     }
 }
