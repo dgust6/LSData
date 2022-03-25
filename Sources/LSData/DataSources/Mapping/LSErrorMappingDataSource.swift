@@ -25,7 +25,6 @@ public extension DataSource {
         LSErrorMappingDataSource(mapper: mapper, dataSource: self)
     }
     
-    
     func errorMap<T: Error>(map: @escaping (OutputError) -> T) -> LSErrorMappingDataSource<Self, LSGenericMapper<OutputError, T>> {
         errorMap(with: LSGenericMapper(map))
     }

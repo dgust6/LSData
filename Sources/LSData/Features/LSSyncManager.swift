@@ -22,6 +22,9 @@ open class LSSyncManager<Source: DataSource, Storage: DataStorage>: SyncManager 
         self.dataStorage = dataStorage
         self.parameter = parameter
         
+        
+        
+        
         self.dataSource
             .store(to: dataStorage, parameter: (), count: 0)
             .sink(receiveCompletion: { _ in }, receiveValue: { _ in })

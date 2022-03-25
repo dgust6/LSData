@@ -1,5 +1,6 @@
 import Foundation
 
+/// Generic `Mapper` created with supplied map method.
 public class LSGenericMapper<In, Out>: Mapper {
     
     public typealias Input = In
@@ -7,13 +8,13 @@ public class LSGenericMapper<In, Out>: Mapper {
     
     public typealias MapMethod = ((In) -> Out)
     
-    public var _map: MapMethod
+    public var mapMethod: MapMethod
     
     public init(_ map: @escaping MapMethod) {
-        _map = map
+        mapMethod = map
     }
     
     public func map(_ input: In) -> Out {
-        _map(input)
+        mapMethod(input)
     }
 }

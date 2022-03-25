@@ -1,11 +1,14 @@
 import Foundation
 import Combine
 
+/// Protocol defining deletable storage.
+///
+/// Deletable storage 
 public protocol DeletableStorage {
-    associatedtype StoredItem
+    associatedtype DeletableItem
     associatedtype DeletionReturn = Void
     
-    func delete(_ item: StoredItem) -> DeletionReturn
+    func delete(_ item: DeletableItem) -> DeletionReturn
         
     func deleteAll() -> DeletionReturn
 }

@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+/// `DataSource` created by wrapping Combine's `Publisher`.
 open class LSPublisherDataSource<P: Publisher>: DataSource {
     
     public typealias Output = P.Output
@@ -19,6 +20,8 @@ open class LSPublisherDataSource<P: Publisher>: DataSource {
 }
 
 public extension Publisher {
+    
+    /// Creates LSData `DataSource` from this publisher.
     func asDataSource() -> LSPublisherDataSource<Self> {
         LSPublisherDataSource(publisher: self)
     }

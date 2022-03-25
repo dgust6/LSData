@@ -19,10 +19,13 @@ open class LSInputMappingDataStorage<Storage: DataStorage, M: Mapper>: DataStora
 }
 
 public extension DataStorage {
+    
+    /// Maps data storage input parameter type.
     func itemMap<M: Mapper>(with mapper: M) -> LSInputMappingDataStorage<Self, M> where Self.StoredItem == M.Output {
         LSInputMappingDataStorage(mapper: mapper, storage: self)
     }
     
+    /// Maps data storage input parameter type.
     func itemMap<MapIn>(map: @escaping (MapIn) -> Self.StoredItem) -> LSInputMappingDataStorage<Self, LSGenericMapper<MapIn, Self.StoredItem>> {
         itemMap(with: LSGenericMapper(map))
     }
