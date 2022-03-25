@@ -42,10 +42,13 @@ open class LSRefreshableDataSource<T>: DataSource where T: DataSource {
                 case .failure(let error):
                     if self?.finishOnError == true {
                         self?.subject.send(completion: .failure(error))
+                        return
                     }
                 case .finished:
+                    self?.isRefreshing = false
                     return
                 }
+                self?.isRefreshing = false
             }, receiveValue: { [weak self] in
                 guard let self = self else { return }
                 self.subject.send($0)
@@ -68,7 +71,7 @@ open class LSRefreshableDataSource<T>: DataSource where T: DataSource {
 public extension DataSource {
     
     /// Creates `LSRefreshableDataSource` from this `DataSource`.
-    func refreshable(autoRefresh: Bool = true, parameter: Parameter) -> LSRefreshableDataSource<Self> {
+    func refreshable(autoRefresh: Bool = false, parameter: Parameter) -> LSRefreshableDataSource<Self> {
         LSRefreshableDataSource(dataSource: self, autoRefresh: autoRefresh, parameter: parameter)
     }
 }
@@ -78,7 +81,7 @@ public extension LSRefreshableDataSource where T.Parameter == Optional<Any> {
         refresh(with: nil)
     }
     
-    convenience init(dataSource: T, autoRefresh: Bool = true) {
+    convenience init(dataSource: T, autoRefresh: Bool = false) {
         self.init(dataSource: dataSource, autoRefresh: autoRefresh, parameter: nil)
     }
 }
