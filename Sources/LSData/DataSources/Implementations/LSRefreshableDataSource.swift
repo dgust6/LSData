@@ -28,7 +28,7 @@ open class LSRefreshableDataSource<T>: DataSource where T: DataSource {
     
     /// Publishes all errors.
     /// This may be useful if `finishOnError` is set to `false` and you wish to see if there are errors happening
-    var errorPublisher: AnyPublisher<T.OutputError, Never> {
+    open var errorPublisher: AnyPublisher<T.OutputError, Never> {
         errorSubject.eraseToAnyPublisher()
     }
     
