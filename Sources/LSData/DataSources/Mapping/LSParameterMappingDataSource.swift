@@ -25,8 +25,14 @@ public extension DataSource {
         LSParameterMappingDataSource(mapper: mapper, dataSource: self)
     }
     
-    
     func paramMap<T>(map: @escaping (T) -> Parameter) -> LSParameterMappingDataSource<Self, LSGenericMapper<T, Parameter>> {
         paramMap(with: LSGenericMapper(map))
+    }
+    
+    func onInput(_ handler: @escaping (Parameter) -> Void) -> LSParameterMappingDataSource<Self, LSGenericMapper<Parameter, Parameter>> {
+        paramMap() { input in
+            handler(input)
+            return input
+        }
     }
 }

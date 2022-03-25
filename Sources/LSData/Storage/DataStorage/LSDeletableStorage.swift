@@ -3,8 +3,8 @@ import Combine
 
 /// Protocol defining deletable storage.
 ///
-/// Deletable storage support's deleting of all items or specified item.
-public protocol Deletable {
+/// Deletable storage 
+public protocol DeletableStorage {
     associatedtype DeletableItem
     associatedtype DeletionReturn = Void
     
