@@ -42,10 +42,13 @@ open class LSRefreshableDataSource<T>: DataSource where T: DataSource {
                 case .failure(let error):
                     if self?.finishOnError == true {
                         self?.subject.send(completion: .failure(error))
+                        return
                     }
                 case .finished:
+                    self?.isRefreshing = false
                     return
                 }
+                self?.isRefreshing = false
             }, receiveValue: { [weak self] in
                 guard let self = self else { return }
                 self.subject.send($0)
