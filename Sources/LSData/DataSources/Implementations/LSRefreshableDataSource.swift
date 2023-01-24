@@ -86,7 +86,7 @@ open class LSRefreshableDataSource<T>: DataSource where T: DataSource {
             .store(in: &cancelBag)
     }
 
-    open func publisher(parameter: Void) -> AnyPublisher<T.Output, T.OutputError> {
+    open func publisher(parameter: Void = ()) -> AnyPublisher<T.Output, T.OutputError> {
         if autoRefresh {
             refresh(with: self.parameter)
         }
