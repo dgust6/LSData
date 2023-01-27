@@ -1,11 +1,11 @@
 import Foundation
 import Combine
 
-public protocol SyncManager {
+public protocol Syncable {
     func sync()
 }
 
-open class LSSyncManager<Source: DataSource, Storage: DataStorage>: SyncManager where Source.Output == Storage.StoredItem, Storage.StorageReturn: Publisher {
+open class SyncManager<Source: DataSource, Storage: DataStorage>: Syncable where Source.Output == Storage.StoredItem, Storage.StorageReturn: Publisher {
 
     open var parameter: Source.Parameter
     
@@ -18,7 +18,7 @@ open class LSSyncManager<Source: DataSource, Storage: DataStorage>: SyncManager 
             .eraseToAnyPublisher()
     }
     
-    private let dataSource: LSRefreshableDataSource<Source>
+    private let dataSource: RefreshableDataSource<Source>
     private let dataStorage: Storage
     private let storageSubject = CurrentValueSubject<Storage.StorageReturn.Output?, Error>(nil)
 
@@ -45,7 +45,7 @@ open class LSSyncManager<Source: DataSource, Storage: DataStorage>: SyncManager 
 }
 
 public extension DataSource {
-    func syncManager<Storage: DataStorage>(with storage: Storage, parameter: Parameter) -> LSSyncManager<Self, Storage> where Output == Storage.StoredItem {
-        LSSyncManager(dataSource: self, dataStorage: storage, parameter: parameter)
+    func syncManager<Storage: DataStorage>(with storage: Storage, parameter: Parameter) -> SyncManager<Self, Storage> where Output == Storage.StoredItem {
+        SyncManager(dataSource: self, dataStorage: storage, parameter: parameter)
     }
 }

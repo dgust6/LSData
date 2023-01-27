@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-open class LSInputMappingDataStorage<Storage: DataStorage, M: Mapper>: DataStorage where Storage.StoredItem == M.Output {
+open class InputMappingDataStorage<Storage: DataStorage, M: Mapper>: DataStorage where Storage.StoredItem == M.Output {
     
     public typealias StoredItem = M.Input
     
@@ -21,12 +21,12 @@ open class LSInputMappingDataStorage<Storage: DataStorage, M: Mapper>: DataStora
 public extension DataStorage {
     
     /// Maps data storage input parameter type.
-    func itemMap<M: Mapper>(with mapper: M) -> LSInputMappingDataStorage<Self, M> where Self.StoredItem == M.Output {
-        LSInputMappingDataStorage(mapper: mapper, storage: self)
+    func itemMap<M: Mapper>(with mapper: M) -> InputMappingDataStorage<Self, M> where Self.StoredItem == M.Output {
+        InputMappingDataStorage(mapper: mapper, storage: self)
     }
     
     /// Maps data storage input parameter type.
-    func itemMap<MapIn>(map: @escaping (MapIn) -> Self.StoredItem) -> LSInputMappingDataStorage<Self, LSGenericMapper<MapIn, Self.StoredItem>> {
-        itemMap(with: LSGenericMapper(map))
+    func itemMap<MapIn>(map: @escaping (MapIn) -> Self.StoredItem) -> InputMappingDataStorage<Self, GenericMapper<MapIn, Self.StoredItem>> {
+        itemMap(with: GenericMapper(map))
     }
 }

@@ -24,8 +24,8 @@ public protocol DataSource {
 public extension DataSource {
     
     /// Type erases the `DataSource` to `LSAnyDataSource`.
-    func erase() -> LSAnyDataSource<Output, Parameter, OutputError> {
-        LSAnyDataSource(dataSource: self)
+    func erase() -> AnyDataSource<Output, Parameter, OutputError> {
+        AnyDataSource(dataSource: self)
     }
 }
 
@@ -48,7 +48,7 @@ public extension DataSource where Parameter == Array<Any> {
 }
 
 /// Type erased `DataSource`
-public class LSAnyDataSource<Output, QueryParameter, OutputError>: DataSource where OutputError: Error {
+public class AnyDataSource<Output, QueryParameter, OutputError>: DataSource where OutputError: Error {
 
     public typealias Output = Output
     public typealias Parameter = QueryParameter
