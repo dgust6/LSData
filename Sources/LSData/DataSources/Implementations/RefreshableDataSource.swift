@@ -11,7 +11,7 @@ public enum RefreshBlockType {
 ///
 /// Common usage can be wrapping an existing `DataSource` such as one triggering network requests and refreshing the data on call of the `refresh` method.
 /// Since Combine's `CurrentValueSubject` is used internally, new subscribers to `publisher` method are immediately given the last result of refresh (if it was refreshed before).
-open class LSRefreshableDataSource<T>: DataSource where T: DataSource {
+open class RefreshableDataSource<T>: DataSource where T: DataSource {
 
     /// If set to `true`, calls on `publisher` method will automatically trigger `refresh`.
     /// Default is `true`
@@ -86,7 +86,7 @@ open class LSRefreshableDataSource<T>: DataSource where T: DataSource {
             .store(in: &cancelBag)
     }
 
-    open func publisher(parameter: Void) -> AnyPublisher<T.Output, T.OutputError> {
+    open func publisher(parameter: Void = ()) -> AnyPublisher<T.Output, T.OutputError> {
         if autoRefresh {
             refresh(with: self.parameter)
         }
@@ -96,7 +96,7 @@ open class LSRefreshableDataSource<T>: DataSource where T: DataSource {
     }
 }
 
-public extension LSRefreshableDataSource where T.Parameter == Void {
+public extension RefreshableDataSource where T.Parameter == Void {
     func refresh() {
         refresh(with: ())
     }
@@ -108,24 +108,24 @@ public extension LSRefreshableDataSource where T.Parameter == Void {
 
 public extension DataSource {
     
-    /// Creates `LSRefreshableDataSource` from this `DataSource`.
-    func refreshable(autoRefresh: Bool = false, parameter: Parameter, finishOnError: Bool = false, refreshBlockType: RefreshBlockType = .regular) -> LSRefreshableDataSource<Self> {
-        LSRefreshableDataSource(dataSource: self, autoRefresh: autoRefresh, parameter: parameter, finishOnError: finishOnError, refreshBlockType: refreshBlockType)
+    /// Creates `RefreshableDataSource` from this `DataSource`.
+    func refreshable(autoRefresh: Bool = false, parameter: Parameter, finishOnError: Bool = false, refreshBlockType: RefreshBlockType = .regular) -> RefreshableDataSource<Self> {
+        RefreshableDataSource(dataSource: self, autoRefresh: autoRefresh, parameter: parameter, finishOnError: finishOnError, refreshBlockType: refreshBlockType)
     }
 }
 
 public extension DataSource where Parameter == Optional<Any>  {
     
-    /// Creates `LSRefreshableDataSource` from this `DataSource`.
-    func refreshable(autoRefresh: Bool = false) -> LSRefreshableDataSource<Self> {
+    /// Creates `RefreshableDataSource` from this `DataSource`.
+    func refreshable(autoRefresh: Bool = false) -> RefreshableDataSource<Self> {
         refreshable(autoRefresh: autoRefresh, parameter: nil)
     }
 }
 
 public extension DataSource where Parameter == Void  {
     
-    /// Creates `LSRefreshableDataSource` from this `DataSource`.
-    func refreshable(autoRefresh: Bool = false) -> LSRefreshableDataSource<Self> {
+    /// Creates `RefreshableDataSource` from this `DataSource`.
+    func refreshable(autoRefresh: Bool = false) -> RefreshableDataSource<Self> {
         refreshable(autoRefresh: autoRefresh, parameter: ())
     }
 }

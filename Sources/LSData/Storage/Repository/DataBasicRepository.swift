@@ -5,7 +5,7 @@ public protocol DataBasicRepository: DataSource, DataStorage, DeletableStorage w
 
 }
 
-open class LSAnyDataBasicRepository<Output, QueryParameter, OutputError, StorageReturn, DeletionReturn>: DataBasicRepository where OutputError: Error {
+open class AnyDataBasicRepository<Output, QueryParameter, OutputError, StorageReturn, DeletionReturn>: DataBasicRepository where OutputError: Error {
     
     public typealias Output = Output
     public typealias Parameter = QueryParameter

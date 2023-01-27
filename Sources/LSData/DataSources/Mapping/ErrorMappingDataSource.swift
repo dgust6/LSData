@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-open class LSErrorMappingDataSource<DS: DataSource, M: Mapper>: DataSource where DS.OutputError == M.Input, M.Output: Error {
+open class ErrorMappingDataSource<DS: DataSource, M: Mapper>: DataSource where DS.OutputError == M.Input, M.Output: Error {
     
     public typealias OutputError = M.Output
     
@@ -21,11 +21,11 @@ open class LSErrorMappingDataSource<DS: DataSource, M: Mapper>: DataSource where
 }
 
 public extension DataSource {
-    func errorMap<M: Mapper>(with mapper: M) -> LSErrorMappingDataSource<Self, M> where M.Input == Self.OutputError, M.Output: Error  {
-        LSErrorMappingDataSource(mapper: mapper, dataSource: self)
+    func errorMap<M: Mapper>(with mapper: M) -> ErrorMappingDataSource<Self, M> where M.Input == Self.OutputError, M.Output: Error  {
+        ErrorMappingDataSource(mapper: mapper, dataSource: self)
     }
     
-    func errorMap<T: Error>(map: @escaping (OutputError) -> T) -> LSErrorMappingDataSource<Self, LSGenericMapper<OutputError, T>> {
-        errorMap(with: LSGenericMapper(map))
+    func errorMap<T: Error>(map: @escaping (OutputError) -> T) -> ErrorMappingDataSource<Self, GenericMapper<OutputError, T>> {
+        errorMap(with: GenericMapper(map))
     }
 }

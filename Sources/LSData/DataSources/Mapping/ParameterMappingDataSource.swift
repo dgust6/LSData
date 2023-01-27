@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-open class LSParameterMappingDataSource<DS: DataSource, M: Mapper>: DataSource where DS.Parameter == M.Output {
+open class ParameterMappingDataSource<DS: DataSource, M: Mapper>: DataSource where DS.Parameter == M.Output {
 
     public typealias Parameter = M.Input
     public typealias Output = DS.Output
@@ -21,15 +21,15 @@ open class LSParameterMappingDataSource<DS: DataSource, M: Mapper>: DataSource w
 }
 
 public extension DataSource {
-    func paramMap<M: Mapper>(with mapper: M) -> LSParameterMappingDataSource<Self, M> where M.Output == Self.Parameter  {
-        LSParameterMappingDataSource(mapper: mapper, dataSource: self)
+    func paramMap<M: Mapper>(with mapper: M) -> ParameterMappingDataSource<Self, M> where M.Output == Self.Parameter  {
+        ParameterMappingDataSource(mapper: mapper, dataSource: self)
     }
     
-    func paramMap<T>(map: @escaping (T) -> Parameter) -> LSParameterMappingDataSource<Self, LSGenericMapper<T, Parameter>> {
-        paramMap(with: LSGenericMapper(map))
+    func paramMap<T>(map: @escaping (T) -> Parameter) -> ParameterMappingDataSource<Self, GenericMapper<T, Parameter>> {
+        paramMap(with: GenericMapper(map))
     }
     
-    func onInput(_ handler: @escaping (Parameter) -> Void) -> LSParameterMappingDataSource<Self, LSGenericMapper<Parameter, Parameter>> {
+    func onInput(_ handler: @escaping (Parameter) -> Void) -> ParameterMappingDataSource<Self, GenericMapper<Parameter, Parameter>> {
         paramMap() { input in
             handler(input)
             return input

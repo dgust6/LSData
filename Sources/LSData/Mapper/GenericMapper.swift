@@ -1,7 +1,7 @@
 import Foundation
 
 /// Generic `Mapper` created with supplied map method.
-public class LSGenericMapper<In, Out>: Mapper {
+public class GenericMapper<In, Out>: Mapper {
     
     public typealias Input = In
     public typealias Output = Out

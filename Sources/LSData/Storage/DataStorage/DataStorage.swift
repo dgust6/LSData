@@ -15,14 +15,14 @@ public protocol DataStorage {
 
 public extension DataStorage {
     
-    /// Type erases the `DataStorage` to `LSAnyDataStorage`.
-    func eraseToAnyStorage() -> LSAnyDataStorage<StoredItem, StorageReturn> {
-        LSAnyDataStorage(storage: self)
+    /// Type erases the `DataStorage` to `AnyDataStorage`.
+    func eraseToAnyStorage() -> AnyDataStorage<StoredItem, StorageReturn> {
+        AnyDataStorage(storage: self)
     }
 }
 
 /// Type erased `DataStorage`.
-public class LSAnyDataStorage<StoredItem, StorageReturn>: DataStorage {
+public class AnyDataStorage<StoredItem, StorageReturn>: DataStorage {
 
     public typealias StoredItem = StoredItem
     public typealias StorageReturn = StorageReturn
@@ -74,7 +74,7 @@ public extension DataSource {
     ///
     /// `count` parameter defines number of times data is stored before terminating. `count` of 0 means that indefinite storage (each time data is outputted, it's stored).
     func store<Storage: DataStorage>(to storage: Storage, parameter: Parameter, count: Int = 1) -> AnyPublisher<Storage.StorageReturn, Error> where Output == Storage.StoredItem {
-        let mappedStorage = storage.resultMap(with: LSToPublisherMapper<Storage.StorageReturn>())
+        let mappedStorage = storage.resultMap(with: ToPublisherMapper<Storage.StorageReturn>())
         return self.store(toPublished: mappedStorage, parameter: parameter, count: count)
     }
 }
