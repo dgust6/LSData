@@ -1,14 +1,14 @@
 import Foundation
 import Combine
 
-open class LSWrappedBasicRepository<Source: DataSource, Storage: DataStorage, Deletable: DeletableStorage>: DataBasicRepository where Storage.StoredItem == Source.Output, Storage.StoredItem == Deletable.DeletableItem {
+open class LSWrappedBasicRepository<Source: DataSource, Storage: DataStorage, Deletable: DeletableStorage>: DataBasicRepository where Storage.StoredItem? == Source.Output, Storage.StoredItem == Deletable.DeletableItem {
     
     public typealias StoredItem = Storage.StoredItem
     public typealias StorageReturn = Storage.StorageReturn
     public typealias OutputError = Source.OutputError
     public typealias Parameter = Source.Parameter
     public typealias Output = Source.Output
-    public typealias DeletableItem = Deletable.DeletableItem
+    public typealias DeletableItem = Storage.StoredItem
     public typealias DeletionReturn = Deletable.DeletionReturn
     
     private let source: Source

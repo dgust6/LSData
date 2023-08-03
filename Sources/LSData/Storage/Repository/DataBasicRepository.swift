@@ -1,18 +1,18 @@
 import Foundation
 import Combine
 
-public protocol DataBasicRepository: DataSource, DataStorage, DeletableStorage where StoredItem == Output, DeletableItem == Output {
+public protocol DataBasicRepository: DataSource, DataStorage, DeletableStorage where Output == StoredItem?, DeletableItem == StoredItem {
 
 }
 
-open class AnyDataBasicRepository<Output, QueryParameter, OutputError, StorageReturn, DeletionReturn>: DataBasicRepository where OutputError: Error {
+open class AnyDataBasicRepository<StoredItem, QueryParameter, OutputError, StorageReturn, DeletionReturn>: DataBasicRepository where OutputError: Error {
     
-    public typealias Output = Output
+    public typealias Output = StoredItem?
     public typealias Parameter = QueryParameter
     public typealias OutputError = OutputError
-    public typealias StoredItem = Output
+    public typealias StoredItem = StoredItem
     public typealias StorageReturn = StorageReturn
-    public typealias DeletableItem = Output
+    public typealias DeletableItem = StoredItem
     public typealias DeletionReturn = DeletionReturn
     
     private let _publisher: ((QueryParameter) -> AnyPublisher<Output, OutputError>)
@@ -38,11 +38,11 @@ open class AnyDataBasicRepository<Output, QueryParameter, OutputError, StorageRe
         _publisher(parameter)
     }
     
-    open func store(_ item: Output) -> StorageReturn {
+    open func store(_ item: StoredItem) -> StorageReturn {
         _store(item)
     }
     
-    public func delete(_ item: Output) -> DeletionReturn {
+    public func delete(_ item: StoredItem) -> DeletionReturn {
         _delete(item)
     }
     
