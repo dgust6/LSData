@@ -1,12 +1,12 @@
 import Foundation
 
 /// Generic `Mapper` created with supplied map method.
-public class GenericMapper<In, Out>: Mapper {
+public class GenericMapper<I, O>: Mapper {
     
-    public typealias Input = In
-    public typealias Output = Out
+    public typealias Input = I
+    public typealias Output = O
     
-    public typealias MapMethod = ((In) -> Out)
+    public typealias MapMethod = ((I) -> O)
     
     public var mapMethod: MapMethod
     
@@ -14,7 +14,7 @@ public class GenericMapper<In, Out>: Mapper {
         mapMethod = map
     }
     
-    public func map(_ input: In) -> Out {
+    public func map(_ input: I) -> O {
         mapMethod(input)
     }
 }

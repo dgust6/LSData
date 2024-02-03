@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-open class LSWrappedBasicRepository<Source: DataSource, Storage: DataStorage, Deletable: DeletableStorage>: DataBasicRepository where Storage.StoredItem? == Source.Output, Storage.StoredItem == Deletable.DeletableItem {
+open class WrappedBasicRepository<Source: DataSource, Storage: DataStorage, Deletable: DeletableStorage>: DataBasicRepository where Storage.StoredItem? == Source.Output, Storage.StoredItem == Deletable.DeletableItem {
     
     public typealias StoredItem = Storage.StoredItem
     public typealias StorageReturn = Storage.StorageReturn

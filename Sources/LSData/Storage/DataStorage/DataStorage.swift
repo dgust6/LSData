@@ -5,41 +5,12 @@ import Combine
 ///
 /// It supplies the method `store` which should store the supplied item.
 /// In many use-cases this `StoredItem` will be an array of supplied type.
-public protocol DataStorage {
+public protocol DataStorage<StoredItem, StorageReturn> {
     associatedtype StoredItem
     associatedtype StorageReturn = Void
     
     /// Stores the supplied `item`.
     func store(_ item: StoredItem) -> StorageReturn
-}
-
-public extension DataStorage {
-    
-    /// Type erases the `DataStorage` to `AnyDataStorage`.
-    func eraseToAnyStorage() -> AnyDataStorage<StoredItem, StorageReturn> {
-        AnyDataStorage(storage: self)
-    }
-}
-
-/// Type erased `DataStorage`.
-public class AnyDataStorage<StoredItem, StorageReturn>: DataStorage {
-
-    public typealias StoredItem = StoredItem
-    public typealias StorageReturn = StorageReturn
-    
-    private let _store: ((StoredItem) -> StorageReturn)
-    
-    public init<Storage: DataStorage>(storage: Storage) where Storage.StoredItem == StoredItem, Storage.StorageReturn == StorageReturn {
-        _store = storage.store
-    }
-    
-    public init(store: @escaping ((StoredItem) -> StorageReturn)) {
-        _store = store
-    }
-    
-    public func store(_ item: StoredItem) -> StorageReturn {
-        _store(item)
-    }
 }
 
 public enum StorageDeallocationError: Error {
