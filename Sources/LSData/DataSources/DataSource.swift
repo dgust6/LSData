@@ -6,7 +6,7 @@ import Combine
 /// Defining and core protocol of LSData, followed by `DataStorage` and `DeletableStorage`.
 /// Functionality is similar to `Publisher` in Combine (or `Observable` in RxSwit) but with added parameter.
 /// This optional (can be `Void`) parameter enables us to query the data source with supported queries and this way handle any use-case such as CoreData data source or Network data source.
-public protocol DataSource {
+public protocol DataSource<Output, Parameter, OutputError> {
     
     /// Output type
     associatedtype Output
@@ -24,7 +24,7 @@ public protocol DataSource {
 public extension DataSource {
     
     /// Type erases the `DataSource` to `LSAnyDataSource`.
-    func erase() -> AnyDataSource<Output, Parameter, OutputError> {
+    func eraseToAnyDataSource() -> AnyDataSource<Output, Parameter, OutputError> {
         AnyDataSource(dataSource: self)
     }
 }
